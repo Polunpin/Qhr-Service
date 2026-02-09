@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tencent.dao.CustomServiceOrdersMapper">
+
+    <resultMap id="CustomServiceOrdersMap" type="com.tencent.model.CustomServiceOrder">
+        <id property="id" column="id"/>
+        <result property="enterpriseId" column="enterprise_id"/>
+        <result property="intentionId" column="intention_id"/>
+        <result property="staffId" column="staff_id"/>
+        <result property="currentStage" column="current_stage"/>
+        <result property="serviceStatus" column="service_status"/>
+        <result property="loanAmount" column="loan_amount"/>
+        <result property="commissionAmount" column="commission_amount"/>
+        <result property="serviceCost" column="service_cost"/>
+        <result property="costDetails" column="cost_details"/>
+        <result property="settleStatus" column="settle_status"/>
+        <result property="lastUpdateAt" column="last_update_at" javaType="java.time.LocalDateTime" />
+        <result property="createdAt" column="created_at" javaType="java.time.LocalDateTime" />
+    </resultMap>
+
+    <sql id="CustomServiceOrder_Columns">
+        id, enterprise_id, intention_id, staff_id, current_stage, service_status,
+        loan_amount, commission_amount, service_cost, cost_details, settle_status,
+        last_update_at, created_at
+    </sql>
+
+    <select id="getById" resultMap="CustomServiceOrdersMap" parameterType="java.lang.Long">
+        SELECT <include refid="CustomServiceOrder_Columns"/>
+        FROM custom_service_orders
+        WHERE id = #{id}
+    </select>
+
+    <select id="list" resultMap="CustomServiceOrdersMap">
+        SELECT <include refid="CustomServiceOrder_Columns"/>
+        FROM custom_service_orders
+        <where>
+            <if test="enterpriseId != null"> AND enterprise_id = #{enterpriseId}</if>
+            <if test="staffId != null"> AND staff_id = #{staffId}</if>
+            <if test="serviceStatus != null and serviceStatus != ''"> AND service_status = #{serviceStatus}</if>
+            <if test="currentStage != null and currentStage != ''"> AND current_stage = #{currentStage}</if>
+            <if test="settleStatus != null and settleStatus != ''"> AND settle_status = #{settleStatus}</if>
+        </where>
+        ORDER BY id DESC
+        <if test="offset != null and size != null">
+            LIMIT #{offset}, #{size}
+        </if>
+    </select>
+
+    <select id="count">
+        SELECT COUNT(1)
+        FROM custom_service_orders
+        <where>
+            <if test="enterpriseId != null"> AND enterprise_id = #{enterpriseId}</if>
+            <if test="staffId != null"> AND staff_id = #{staffId}</if>
+            <if test="serviceStatus != null and serviceStatus != ''"> AND service_status = #{serviceStatus}</if>
+            <if test="currentStage != null and currentStage != ''"> AND current_stage = #{currentStage}</if>
+            <if test="settleStatus != null and settleStatus != ''"> AND settle_status = #{settleStatus}</if>
+        </where>
+    </select>
+
+    <insert id="insert" parameterType="com.tencent.model.CustomServiceOrder" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO custom_service_orders (enterprise_id, intention_id, staff_id, current_stage,
+                                           service_status, loan_amount, commission_amount, service_cost,
+                                           cost_details, settle_status)
+        VALUES (#{enterpriseId}, #{intentionId}, #{staffId}, #{currentStage},
+                #{serviceStatus}, #{loanAmount}, #{commissionAmount}, #{serviceCost},
+                #{costDetails}, #{settleStatus})
+    </insert>
+
+    <update id="update" parameterType="com.tencent.model.CustomServiceOrder">
+        UPDATE custom_service_orders
+        <set>
+            <if test="enterpriseId != null">enterprise_id = #{enterpriseId},</if>
+            <if test="intentionId != null">intention_id = #{intentionId},</if>
+            <if test="staffId != null">staff_id = #{staffId},</if>
+            <if test="currentStage != null">current_stage = #{currentStage},</if>
+            <if test="serviceStatus != null">service_status = #{serviceStatus},</if>
+            <if test="loanAmount != null">loan_amount = #{loanAmount},</if>
+            <if test="commissionAmount != null">commission_amount = #{commissionAmount},</if>
+            <if test="serviceCost != null">service_cost = #{serviceCost},</if>
+            <if test="costDetails != null">cost_details = #{costDetails},</if>
+            <if test="settleStatus != null">settle_status = #{settleStatus},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateStage">
+        UPDATE custom_service_orders SET current_stage = #{currentStage}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateServiceStatus">
+        UPDATE custom_service_orders SET service_status = #{serviceStatus}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateSettleStatus">
+        UPDATE custom_service_orders SET settle_status = #{settleStatus}
+        WHERE id = #{id}
+    </update>
+
+    <update id="assignStaff">
+        UPDATE custom_service_orders SET staff_id = #{staffId}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Long">
+        DELETE FROM custom_service_orders WHERE id = #{id}
+    </delete>
+
+</mapper>

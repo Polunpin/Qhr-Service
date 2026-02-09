@@ -61,33 +61,13 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-logging</artifactId>
         </dependency>
-        <!-- 规则引擎 -->
-        <!-- Source: https://mvnrepository.com/artifact/org.kie/kie-spring -->
+        <!-- 规则引擎 Source: https://mvnrepository.com/artifact/org.drools/drools-compiler -->
         <dependency>
-            <groupId>org.kie</groupId>
-            <artifactId>kie-spring</artifactId>
-            <version>7.74.1.Final</version>
+            <groupId>org.drools</groupId>
+            <artifactId>drools-compiler</artifactId>
+            <version>10.1.0</version>
             <scope>compile</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-tx</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-beans</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-context</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
-
     </dependencies>
 
     <build>

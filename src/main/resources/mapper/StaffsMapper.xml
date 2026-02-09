@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tencent.dao.StaffsMapper">
+
+    <resultMap id="StaffsMap" type="com.tencent.model.Staff">
+        <id property="id" column="id"/>
+        <result property="openid" column="openid"/>
+        <result property="realName" column="real_name"/>
+        <result property="mobile" column="mobile"/>
+        <result property="role" column="role"/>
+        <result property="department" column="department"/>
+        <result property="status" column="status"/>
+        <result property="lastUpdateAt" column="last_update_at" javaType="java.time.LocalDateTime" />
+        <result property="createdAt" column="created_at" javaType="java.time.LocalDateTime" />
+    </resultMap>
+
+    <sql id="Staff_Columns">
+        id, openid, real_name, mobile, role, department, status, last_update_at, created_at
+    </sql>
+
+    <select id="getById" resultMap="StaffsMap" parameterType="java.lang.Long">
+        SELECT <include refid="Staff_Columns"/>
+        FROM staffs
+        WHERE id = #{id}
+    </select>
+
+    <select id="getByMobile" resultMap="StaffsMap" parameterType="java.lang.String">
+        SELECT <include refid="Staff_Columns"/>
+        FROM staffs
+        WHERE mobile = #{mobile}
+    </select>
+
+    <select id="list" resultMap="StaffsMap">
+        SELECT <include refid="Staff_Columns"/>
+        FROM staffs
+        <where>
+            <if test="role != null and role != ''"> AND role = #{role}</if>
+            <if test="status != null"> AND status = #{status}</if>
+            <if test="department != null and department != ''"> AND department = #{department}</if>
+            <if test="mobile != null and mobile != ''"> AND mobile = #{mobile}</if>
+        </where>
+        ORDER BY id DESC
+        <if test="offset != null and size != null">
+            LIMIT #{offset}, #{size}
+        </if>
+    </select>
+
+    <select id="count">
+        SELECT COUNT(1)
+        FROM staffs
+        <where>
+            <if test="role != null and role != ''"> AND role = #{role}</if>
+            <if test="status != null"> AND status = #{status}</if>
+            <if test="department != null and department != ''"> AND department = #{department}</if>
+            <if test="mobile != null and mobile != ''"> AND mobile = #{mobile}</if>
+        </where>
+    </select>
+
+    <insert id="insert" parameterType="com.tencent.model.Staff" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO staffs (openid, real_name, mobile, role, department, status)
+        VALUES (#{openid}, #{realName}, #{mobile}, #{role}, #{department}, #{status})
+    </insert>
+
+    <update id="update" parameterType="com.tencent.model.Staff">
+        UPDATE staffs
+        <set>
+            <if test="openid != null">openid = #{openid},</if>
+            <if test="realName != null">real_name = #{realName},</if>
+            <if test="mobile != null">mobile = #{mobile},</if>
+            <if test="role != null">role = #{role},</if>
+            <if test="department != null">department = #{department},</if>
+            <if test="status != null">status = #{status},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateStatus">
+        UPDATE staffs SET status = #{status}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Long">
+        DELETE FROM staffs WHERE id = #{id}
+    </delete>
+
+</mapper>

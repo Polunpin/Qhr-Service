@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tencent.dao.UsersMapper">
+
+    <resultMap id="UsersMap" type="com.tencent.model.User">
+        <id property="id" column="id"/>
+        <result property="openid" column="openid"/>
+        <result property="unionid" column="unionid"/>
+        <result property="mobile" column="mobile"/>
+        <result property="realName" column="real_name"/>
+        <result property="status" column="status"/>
+        <result property="createdAt" column="created_at" javaType="java.time.LocalDateTime" />
+        <result property="updatedAt" column="updated_at" javaType="java.time.LocalDateTime" />
+    </resultMap>
+
+    <sql id="User_Columns">
+        id, openid, unionid, mobile, real_name, status, created_at, updated_at
+    </sql>
+
+    <select id="getById" resultMap="UsersMap" parameterType="java.lang.Long">
+        SELECT <include refid="User_Columns"/>
+        FROM users
+        WHERE id = #{id}
+    </select>
+
+    <select id="getByOpenid" resultMap="UsersMap" parameterType="java.lang.String">
+        SELECT <include refid="User_Columns"/>
+        FROM users
+        WHERE openid = #{openid}
+    </select>
+
+    <select id="list" resultMap="UsersMap">
+        SELECT <include refid="User_Columns"/>
+        FROM users
+        <where>
+            <if test="status != null"> AND status = #{status}</if>
+            <if test="mobile != null and mobile != ''"> AND mobile = #{mobile}</if>
+            <if test="realName != null and realName != ''"> AND real_name LIKE CONCAT('%', #{realName}, '%')</if>
+        </where>
+        ORDER BY id DESC
+        <if test="offset != null and size != null">
+            LIMIT #{offset}, #{size}
+        </if>
+    </select>
+
+    <select id="count">
+        SELECT COUNT(1)
+        FROM users
+        <where>
+            <if test="status != null"> AND status = #{status}</if>
+            <if test="mobile != null and mobile != ''"> AND mobile = #{mobile}</if>
+            <if test="realName != null and realName != ''"> AND real_name LIKE CONCAT('%', #{realName}, '%')</if>
+        </where>
+    </select>
+
+    <select id="listByEnterpriseId" resultMap="UsersMap">
+        SELECT u.id, u.openid, u.unionid, u.mobile, u.real_name, u.status, u.created_at, u.updated_at
+        FROM users u
+        JOIN user_enterprise_relation r ON u.id = r.user_id
+        WHERE r.enterprise_id = #{enterpriseId}
+        ORDER BY u.id DESC
+        <if test="offset != null and size != null">
+            LIMIT #{offset}, #{size}
+        </if>
+    </select>
+
+    <select id="countByEnterpriseId">
+        SELECT COUNT(1)
+        FROM users u
+        JOIN user_enterprise_relation r ON u.id = r.user_id
+        WHERE r.enterprise_id = #{enterpriseId}
+    </select>
+
+    <insert id="insert" parameterType="com.tencent.model.User" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO users (openid, unionid, mobile, real_name, status)
+        VALUES (#{openid}, #{unionid}, #{mobile}, #{realName}, #{status})
+    </insert>
+
+    <update id="update" parameterType="com.tencent.model.User">
+        UPDATE users
+        <set>
+            <if test="openid != null">openid = #{openid},</if>
+            <if test="unionid != null">unionid = #{unionid},</if>
+            <if test="mobile != null">mobile = #{mobile},</if>
+            <if test="realName != null">real_name = #{realName},</if>
+            <if test="status != null">status = #{status},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Long">
+        DELETE FROM users WHERE id = #{id}
+    </delete>
+
+    <update id="updateStatus">
+        UPDATE users SET status = #{status}
+        WHERE id = #{id}
+    </update>
+
+</mapper>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tencent.dao.StatusLogsMapper">
+
+    <resultMap id="StatusLogsMap" type="com.tencent.model.StatusLog">
+        <id property="id" column="id"/>
+        <result property="orderId" column="order_id"/>
+        <result property="operatorType" column="operator_type"/>
+        <result property="operatorId" column="operator_id"/>
+        <result property="preStage" column="pre_stage"/>
+        <result property="postStage" column="post_stage"/>
+        <result property="remark" column="remark"/>
+        <result property="createdAt" column="created_at" javaType="java.time.LocalDateTime" />
+    </resultMap>
+
+    <sql id="StatusLog_Columns">
+        id, order_id, operator_type, operator_id, pre_stage, post_stage, remark, created_at
+    </sql>
+
+    <select id="getById" resultMap="StatusLogsMap" parameterType="java.lang.Long">
+        SELECT <include refid="StatusLog_Columns"/>
+        FROM status_logs
+        WHERE id = #{id}
+    </select>
+
+    <select id="listByOrderId" resultMap="StatusLogsMap">
+        SELECT <include refid="StatusLog_Columns"/>
+        FROM status_logs
+        WHERE order_id = #{orderId}
+        ORDER BY id DESC
+        <if test="offset != null and size != null">
+            LIMIT #{offset}, #{size}
+        </if>
+    </select>
+
+    <select id="countByOrderId">
+        SELECT COUNT(1)
+        FROM status_logs
+        WHERE order_id = #{orderId}
+    </select>
+
+    <insert id="insert" parameterType="com.tencent.model.StatusLog" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO status_logs (order_id, operator_type, operator_id, pre_stage, post_stage, remark)
+        VALUES (#{orderId}, #{operatorType}, #{operatorId}, #{preStage}, #{postStage}, #{remark})
+    </insert>
+
+</mapper>
