@@ -1,7 +1,6 @@
 # 选择构建用基础镜像。如需更换，请到[dockerhub官方仓库](https://hub.docker.com/_/java?tab=tags)自行选择后替换。
 # 升级JDK版本1:maven:3.8.7-openjdk-18-slim
-#FROM maven:3.8.7-openjdk-18-slim
-FROM maven:3.9-amazoncorretto-21 as build
+FROM maven:3.9.9-eclipse-temurin-21 as build
 
 # 指定构建过程中的工作目录
 WORKDIR /app
@@ -18,7 +17,7 @@ RUN mvn -s /app/settings.xml -f /app/pom.xml clean package
 
 # 选择运行时基础镜像
 # 升级JDK版本2:alpine:3.21（影响下方依赖包）
-FROM alpine:latest
+FROM eclipse-temurin:21-jre-jammy
 
 # 安装依赖包，如需其他依赖包，请到alpine依赖包管理(https://pkgs.alpinelinux.org/packages?name=openjdk21&branch=v3.13)查找。
 # 选用国内镜像源以提高下载速度
@@ -49,4 +48,4 @@ EXPOSE 80
 # 执行启动命令.
 # 写多行独立的CMD命令是错误写法！只有最后一行CMD命令会被执行，之前的都会被忽略，导致业务报错。
 # 请参考[Docker官方文档之CMD命令](https://docs.docker.com/engine/reference/builder/#cmd)
-CMD ["java", "-jar", "/app/HAX-Server-1.0.jar"]
+CMD ["java", "-jar", "/app/QhrService.jar"]

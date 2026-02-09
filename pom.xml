@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.tencent</groupId>
-    <artifactId>Qhr-Service</artifactId>
+    <artifactId>QhrService</artifactId>
     <version>1.0</version>
-    <name>Qhr-Service</name>
-    <description>Qhr-Service project for Spring Boot</description>
+    <name>QhrService</name>
+    <description>Service project for Spring Boot</description>
     <properties>
         <java.version>21</java.version>
     </properties>
