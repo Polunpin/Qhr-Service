@@ -1,6 +1,7 @@
 # 选择构建用基础镜像。如需更换，请到[dockerhub官方仓库](https://hub.docker.com/_/java?tab=tags)自行选择后替换。
 # 升级JDK版本1:maven:3.8.7-openjdk-18-slim
-FROM maven:3.8.7-openjdk-18-slim as build
+#FROM maven:3.8.7-openjdk-18-slim
+FROM maven:3.9-amazoncorretto-21 as build
 
 # 指定构建过程中的工作目录
 WORKDIR /app
