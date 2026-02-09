@@ -32,4 +32,6 @@ public interface StaffsMapper {
              @Param("status") Integer status,
              @Param("department") String department,
              @Param("mobile") String mobile);
+
+  long lastInsertId();
 }

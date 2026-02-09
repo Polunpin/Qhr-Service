@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import com.tencent.config.ApiAssert;
 import com.tencent.config.ApiCode;
-import com.tencent.config.ApiException;
-import com.tencent.config.PageRequest;
+import com.tencent.config.PageBounds;
 import com.tencent.config.PageResult;
 
 @RestController
@@ -23,58 +23,55 @@ public class MatchRecordController {
     this.matchRecordService = matchRecordService;
   }
 
+  /** 查询匹配记录详情 */
   @GetMapping("/{id}")
   public ApiResponse getById(@PathVariable Long id) {
     MatchRecord record = matchRecordService.getById(id);
-    if (record == null) {
-      throw new ApiException(ApiCode.NOT_FOUND, "匹配记录不存在");
-    }
+    ApiAssert.notNull(record, ApiCode.NOT_FOUND, "匹配记录不存在");
     return ApiResponse.ok(record);
   }
 
+  /** 分页查询匹配记录列表 */
   @GetMapping("/list")
   public ApiResponse list(@RequestParam(required = false) Long enterpriseId,
                           @RequestParam(required = false) Long intentionId,
                           @RequestParam(required = false) String status,
                           @RequestParam(required = false) Integer page,
                           @RequestParam(required = false) Integer size) {
-    int safePage = PageRequest.normalizePage(page);
-    int safeSize = PageRequest.normalizeSize(size);
-    int offset = PageRequest.offset(safePage, safeSize);
-    List<MatchRecord> records = matchRecordService.list(enterpriseId, intentionId, status, offset, safeSize);
+    PageBounds bounds = PageBounds.of(page, size);
+    List<MatchRecord> records = matchRecordService.list(enterpriseId, intentionId, status,
+        bounds.offset(), bounds.size());
     long total = matchRecordService.count(enterpriseId, intentionId, status);
-    return ApiResponse.ok(PageResult.of(records, total, safePage, safeSize));
+    return ApiResponse.ok(PageResult.of(records, total, bounds.page(), bounds.size()));
   }
 
+  /** 创建匹配记录 */
   @PostMapping
   public ApiResponse create(@RequestBody MatchRecord record) {
     Long id = matchRecordService.create(record);
     return ApiResponse.ok(id);
   }
 
+  /** 更新匹配记录 */
   @PutMapping("/{id}")
   public ApiResponse update(@PathVariable Long id, @RequestBody MatchRecord record) {
-    record.setId(id);
-    if (!matchRecordService.update(record)) {
-      throw new ApiException(ApiCode.NOT_FOUND, "匹配记录不存在");
-    }
+    ApiAssert.isTrue(matchRecordService.update(record.withId(id)), ApiCode.NOT_FOUND, "匹配记录不存在");
     return ApiResponse.ok(true);
   }
 
+  /** 删除匹配记录 */
   @DeleteMapping("/{id}")
   public ApiResponse delete(@PathVariable Long id) {
-    if (!matchRecordService.delete(id)) {
-      throw new ApiException(ApiCode.NOT_FOUND, "匹配记录不存在");
-    }
+    ApiAssert.isTrue(matchRecordService.delete(id), ApiCode.NOT_FOUND, "匹配记录不存在");
     return ApiResponse.ok(true);
   }
 
+  /** 更新匹配记录状态 */
   @PostMapping("/{id}/status")
   public ApiResponse updateStatus(@PathVariable Long id,
                                   @RequestBody UpdateStringStatusRequest request) {
-    if (!matchRecordService.updateStatus(id, request.getStatus())) {
-      throw new ApiException(ApiCode.NOT_FOUND, "匹配记录不存在");
-    }
+    ApiAssert.isTrue(matchRecordService.updateStatus(id, request.status()),
+        ApiCode.NOT_FOUND, "匹配记录不存在");
     return ApiResponse.ok(true);
   }
 }

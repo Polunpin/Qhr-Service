@@ -36,4 +36,6 @@ public interface EnterprisesMapper {
                                 @Param("size") Integer size);
 
   long countByUserId(@Param("userId") Long userId);
+
+  long lastInsertId();
 }

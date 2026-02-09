@@ -3,14 +3,16 @@
 <mapper namespace="com.tencent.dao.UsersMapper">
 
     <resultMap id="UsersMap" type="com.tencent.model.User">
-        <id property="id" column="id"/>
-        <result property="openid" column="openid"/>
-        <result property="unionid" column="unionid"/>
-        <result property="mobile" column="mobile"/>
-        <result property="realName" column="real_name"/>
-        <result property="status" column="status"/>
-        <result property="createdAt" column="created_at" javaType="java.time.LocalDateTime" />
-        <result property="updatedAt" column="updated_at" javaType="java.time.LocalDateTime" />
+        <constructor>
+            <idArg column="id" javaType="java.lang.Long" name="id"/>
+            <arg column="openid" javaType="java.lang.String" name="openid"/>
+            <arg column="unionid" javaType="java.lang.String" name="unionid"/>
+            <arg column="mobile" javaType="java.lang.String" name="mobile"/>
+            <arg column="real_name" javaType="java.lang.String" name="realName"/>
+            <arg column="status" javaType="java.lang.Integer" name="status"/>
+            <arg column="created_at" javaType="java.time.LocalDateTime" name="createdAt"/>
+            <arg column="updated_at" javaType="java.time.LocalDateTime" name="updatedAt"/>
+        </constructor>
     </resultMap>
 
     <sql id="User_Columns">
@@ -71,7 +73,7 @@
         WHERE r.enterprise_id = #{enterpriseId}
     </select>
 
-    <insert id="insert" parameterType="com.tencent.model.User" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" parameterType="com.tencent.model.User">
         INSERT INTO users (openid, unionid, mobile, real_name, status)
         VALUES (#{openid}, #{unionid}, #{mobile}, #{realName}, #{status})
     </insert>
@@ -96,5 +98,9 @@
         UPDATE users SET status = #{status}
         WHERE id = #{id}
     </update>
+
+    <select id="lastInsertId" resultType="long">
+        SELECT LAST_INSERT_ID()
+    </select>
 
 </mapper>

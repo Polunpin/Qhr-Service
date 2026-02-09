@@ -1,17 +1,11 @@
 package com.tencent.dto;
 
-import lombok.Data;
-
-@Data
-public class AdvanceStageRequest {
-
-  private String postStage;
-
-  private String serviceStatus;
-
-  private String remark;
-
-  private String operatorType;
-
-  private Long operatorId;
+/**
+ * 订单阶段推进请求。
+ */
+public record AdvanceStageRequest(String postStage,
+                                  String serviceStatus,
+                                  String remark,
+                                  String operatorType,
+                                  Long operatorId) {
 }

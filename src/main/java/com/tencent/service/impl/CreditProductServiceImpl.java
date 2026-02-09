@@ -26,7 +26,7 @@ public class CreditProductServiceImpl implements CreditProductService {
   @Override
   public Long create(CreditProduct product) {
     creditProductsMapper.insert(product);
-    return product.getId();
+    return creditProductsMapper.lastInsertId();
   }
 
   @Override

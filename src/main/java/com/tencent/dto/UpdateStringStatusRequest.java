@@ -1,9 +1,7 @@
 package com.tencent.dto;
 
-import lombok.Data;
-
-@Data
-public class UpdateStringStatusRequest {
-
-  private String status;
+/**
+ * 更新字符串状态请求。
+ */
+public record UpdateStringStatusRequest(String status) {
 }

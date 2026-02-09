@@ -1,9 +1,7 @@
 package com.tencent.dto;
 
-import lombok.Data;
-
-@Data
-public class AssignStaffRequest {
-
-  private Long staffId;
+/**
+ * 指派员工请求。
+ */
+public record AssignStaffRequest(Long staffId) {
 }

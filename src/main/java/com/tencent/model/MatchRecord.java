@@ -1,31 +1,26 @@
 package com.tencent.model;
 
-import lombok.Data;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Data
-public class MatchRecord implements Serializable {
+/**
+ * 匹配记录实体。
+ */
+public record MatchRecord(Long id,
+                          String matchNo,
+                          Long enterpriseId,
+                          Long intentionId,
+                          String productIds,
+                          BigDecimal matchScore,
+                          String riskType,
+                          String riskLevel,
+                          String status,
+                          LocalDateTime createdAt) implements Serializable, WithId<MatchRecord> {
 
-  private Long id;
-
-  private String matchNo;
-
-  private Long enterpriseId;
-
-  private Long intentionId;
-
-  private String productIds;
-
-  private BigDecimal matchScore;
-
-  private String riskType;
-
-  private String riskLevel;
-
-  private String status;
-
-  private LocalDateTime createdAt;
+  /** 复制并替换id。 */
+  public MatchRecord withId(Long id) {
+    return new MatchRecord(id, matchNo, enterpriseId, intentionId, productIds,
+        matchScore, riskType, riskLevel, status, createdAt);
+  }
 }

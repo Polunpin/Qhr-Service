@@ -38,4 +38,6 @@ public interface CustomServiceOrdersMapper {
              @Param("serviceStatus") String serviceStatus,
              @Param("currentStage") String currentStage,
              @Param("settleStatus") String settleStatus);
+
+  long lastInsertId();
 }

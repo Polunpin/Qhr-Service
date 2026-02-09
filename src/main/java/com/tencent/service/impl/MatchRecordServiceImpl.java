@@ -32,11 +32,12 @@ public class MatchRecordServiceImpl implements MatchRecordService {
 
   @Override
   public Long create(MatchRecord record) {
-    if (record.getMatchNo() == null || record.getMatchNo().trim().isEmpty()) {
-      record.setMatchNo(generateMatchNo());
+    MatchRecord toSave = record;
+    if (record.matchNo() == null || record.matchNo().trim().isEmpty()) {
+      toSave = withMatchNo(record, generateMatchNo());
     }
-    matchRecordsMapper.insert(record);
-    return record.getId();
+    matchRecordsMapper.insert(toSave);
+    return matchRecordsMapper.lastInsertId();
   }
 
   @Override
@@ -70,5 +71,18 @@ public class MatchRecordServiceImpl implements MatchRecordService {
     String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
     int random = ThreadLocalRandom.current().nextInt(10000);
     return prefix + timestamp + String.format("%04d", random);
+  }
+
+  private MatchRecord withMatchNo(MatchRecord source, String matchNo) {
+    return new MatchRecord(source.id(),
+        matchNo,
+        source.enterpriseId(),
+        source.intentionId(),
+        source.productIds(),
+        source.matchScore(),
+        source.riskType(),
+        source.riskLevel(),
+        source.status(),
+        source.createdAt());
   }
 }

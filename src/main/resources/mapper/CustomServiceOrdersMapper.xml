@@ -3,19 +3,21 @@
 <mapper namespace="com.tencent.dao.CustomServiceOrdersMapper">
 
     <resultMap id="CustomServiceOrdersMap" type="com.tencent.model.CustomServiceOrder">
-        <id property="id" column="id"/>
-        <result property="enterpriseId" column="enterprise_id"/>
-        <result property="intentionId" column="intention_id"/>
-        <result property="staffId" column="staff_id"/>
-        <result property="currentStage" column="current_stage"/>
-        <result property="serviceStatus" column="service_status"/>
-        <result property="loanAmount" column="loan_amount"/>
-        <result property="commissionAmount" column="commission_amount"/>
-        <result property="serviceCost" column="service_cost"/>
-        <result property="costDetails" column="cost_details"/>
-        <result property="settleStatus" column="settle_status"/>
-        <result property="lastUpdateAt" column="last_update_at" javaType="java.time.LocalDateTime" />
-        <result property="createdAt" column="created_at" javaType="java.time.LocalDateTime" />
+        <constructor>
+            <idArg column="id" javaType="java.lang.Long" name="id"/>
+            <arg column="enterprise_id" javaType="java.lang.Long" name="enterpriseId"/>
+            <arg column="intention_id" javaType="java.lang.Long" name="intentionId"/>
+            <arg column="staff_id" javaType="java.lang.Long" name="staffId"/>
+            <arg column="current_stage" javaType="java.lang.String" name="currentStage"/>
+            <arg column="service_status" javaType="java.lang.String" name="serviceStatus"/>
+            <arg column="loan_amount" javaType="java.math.BigDecimal" name="loanAmount"/>
+            <arg column="commission_amount" javaType="java.math.BigDecimal" name="commissionAmount"/>
+            <arg column="service_cost" javaType="java.math.BigDecimal" name="serviceCost"/>
+            <arg column="cost_details" javaType="java.lang.String" name="costDetails"/>
+            <arg column="settle_status" javaType="java.lang.String" name="settleStatus"/>
+            <arg column="last_update_at" javaType="java.time.LocalDateTime" name="lastUpdateAt"/>
+            <arg column="created_at" javaType="java.time.LocalDateTime" name="createdAt"/>
+        </constructor>
     </resultMap>
 
     <sql id="CustomServiceOrder_Columns">
@@ -58,7 +60,7 @@
         </where>
     </select>
 
-    <insert id="insert" parameterType="com.tencent.model.CustomServiceOrder" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" parameterType="com.tencent.model.CustomServiceOrder">
         INSERT INTO custom_service_orders (enterprise_id, intention_id, staff_id, current_stage,
                                            service_status, loan_amount, commission_amount, service_cost,
                                            cost_details, settle_status)
@@ -107,5 +109,9 @@
     <delete id="delete" parameterType="java.lang.Long">
         DELETE FROM custom_service_orders WHERE id = #{id}
     </delete>
+
+    <select id="lastInsertId" resultType="long">
+        SELECT LAST_INSERT_ID()
+    </select>
 
 </mapper>

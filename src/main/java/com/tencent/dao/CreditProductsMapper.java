@@ -41,4 +41,6 @@ public interface CreditProductsMapper {
                              @Param("expectedTerm") Integer expectedTerm,
                              @Param("regionCode") String regionCode,
                              @Param("productType") String productType);
+
+  long lastInsertId();
 }

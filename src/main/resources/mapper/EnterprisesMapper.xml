@@ -3,19 +3,21 @@
 <mapper namespace="com.tencent.dao.EnterprisesMapper">
 
     <resultMap id="EnterprisesMap" type="com.tencent.model.Enterprise">
-        <id property="id" column="id"/>
-        <result property="fullName" column="full_name"/>
-        <result property="creditCode" column="credit_code"/>
-        <result property="industry" column="industry"/>
-        <result property="taxRating" column="tax_rating"/>
-        <result property="regionCode" column="region_code"/>
-        <result property="annualTurnover" column="annual_turnover"/>
-        <result property="annualTaxAmount" column="annual_tax_amount"/>
-        <result property="existingLoanBalance" column="existing_loan_balance"/>
-        <result property="matchStatus" column="match_status"/>
-        <result property="profileData" column="profile_data"/>
-        <result property="createdAt" column="created_at" javaType="java.time.LocalDateTime" />
-        <result property="updatedAt" column="updated_at" javaType="java.time.LocalDateTime" />
+        <constructor>
+            <idArg column="id" javaType="java.lang.Long" name="id"/>
+            <arg column="full_name" javaType="java.lang.String" name="fullName"/>
+            <arg column="credit_code" javaType="java.lang.String" name="creditCode"/>
+            <arg column="industry" javaType="java.lang.String" name="industry"/>
+            <arg column="tax_rating" javaType="java.lang.String" name="taxRating"/>
+            <arg column="region_code" javaType="java.lang.String" name="regionCode"/>
+            <arg column="annual_turnover" javaType="java.math.BigDecimal" name="annualTurnover"/>
+            <arg column="annual_tax_amount" javaType="java.math.BigDecimal" name="annualTaxAmount"/>
+            <arg column="existing_loan_balance" javaType="java.math.BigDecimal" name="existingLoanBalance"/>
+            <arg column="match_status" javaType="java.lang.String" name="matchStatus"/>
+            <arg column="profile_data" javaType="java.lang.String" name="profileData"/>
+            <arg column="created_at" javaType="java.time.LocalDateTime" name="createdAt"/>
+            <arg column="updated_at" javaType="java.time.LocalDateTime" name="updatedAt"/>
+        </constructor>
     </resultMap>
 
     <sql id="Enterprise_Columns">
@@ -74,7 +76,7 @@
         WHERE r.user_id = #{userId}
     </select>
 
-    <insert id="insert" parameterType="com.tencent.model.Enterprise" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" parameterType="com.tencent.model.Enterprise">
         INSERT INTO enterprises (full_name, credit_code, industry, tax_rating, region_code,
                                  annual_turnover, annual_tax_amount, existing_loan_balance,
                                  match_status, profile_data)
@@ -113,5 +115,9 @@
     <delete id="delete" parameterType="java.lang.Long">
         DELETE FROM enterprises WHERE id = #{id}
     </delete>
+
+    <select id="lastInsertId" resultType="long">
+        SELECT LAST_INSERT_ID()
+    </select>
 
 </mapper>

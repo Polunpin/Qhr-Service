@@ -3,21 +3,23 @@
 <mapper namespace="com.tencent.dao.CreditProductsMapper">
 
     <resultMap id="CreditProductsMap" type="com.tencent.model.CreditProduct">
-        <id property="id" column="id"/>
-        <result property="bankName" column="bank_name"/>
-        <result property="productName" column="product_name"/>
-        <result property="productType" column="product_type"/>
-        <result property="minAmount" column="min_amount"/>
-        <result property="maxAmount" column="max_amount"/>
-        <result property="interestRateRange" column="interest_rate_range"/>
-        <result property="loanTerm" column="loan_term"/>
-        <result property="repaymentMethod" column="repayment_method"/>
-        <result property="serviceArea" column="service_area"/>
-        <result property="criteriaJson" column="criteria_json"/>
-        <result property="status" column="status"/>
-        <result property="successRate" column="success_rate"/>
-        <result property="createdAt" column="created_at" javaType="java.time.LocalDateTime" />
-        <result property="updatedAt" column="updated_at" javaType="java.time.LocalDateTime" />
+        <constructor>
+            <idArg column="id" javaType="java.lang.Long" name="id"/>
+            <arg column="bank_name" javaType="java.lang.String" name="bankName"/>
+            <arg column="product_name" javaType="java.lang.String" name="productName"/>
+            <arg column="product_type" javaType="java.lang.String" name="productType"/>
+            <arg column="min_amount" javaType="java.math.BigDecimal" name="minAmount"/>
+            <arg column="max_amount" javaType="java.math.BigDecimal" name="maxAmount"/>
+            <arg column="interest_rate_range" javaType="java.lang.String" name="interestRateRange"/>
+            <arg column="loan_term" javaType="java.lang.Integer" name="loanTerm"/>
+            <arg column="repayment_method" javaType="java.lang.String" name="repaymentMethod"/>
+            <arg column="service_area" javaType="java.lang.String" name="serviceArea"/>
+            <arg column="criteria_json" javaType="java.lang.String" name="criteriaJson"/>
+            <arg column="status" javaType="java.lang.Integer" name="status"/>
+            <arg column="success_rate" javaType="java.math.BigDecimal" name="successRate"/>
+            <arg column="created_at" javaType="java.time.LocalDateTime" name="createdAt"/>
+            <arg column="updated_at" javaType="java.time.LocalDateTime" name="updatedAt"/>
+        </constructor>
     </resultMap>
 
     <sql id="CreditProduct_Columns">
@@ -84,7 +86,7 @@
         </where>
     </select>
 
-    <insert id="insert" parameterType="com.tencent.model.CreditProduct" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" parameterType="com.tencent.model.CreditProduct">
         INSERT INTO credit_products (bank_name, product_name, product_type, min_amount, max_amount,
                                      interest_rate_range, loan_term, repayment_method, service_area,
                                      criteria_json, status, success_rate)
@@ -120,5 +122,9 @@
     <delete id="delete" parameterType="java.lang.Long">
         DELETE FROM credit_products WHERE id = #{id}
     </delete>
+
+    <select id="lastInsertId" resultType="long">
+        SELECT LAST_INSERT_ID()
+    </select>
 
 </mapper>

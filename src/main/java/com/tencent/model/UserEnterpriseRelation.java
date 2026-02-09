@@ -1,20 +1,19 @@
 package com.tencent.model;
 
-import lombok.Data;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@Data
-public class UserEnterpriseRelation implements Serializable {
+/**
+ * 用户-企业关系实体。
+ */
+public record UserEnterpriseRelation(Long id,
+                                     Long enterpriseId,
+                                     Long userId,
+                                     String role,
+                                     LocalDateTime createdAt) implements Serializable, WithId<UserEnterpriseRelation> {
 
-  private Long id;
-
-  private Long enterpriseId;
-
-  private Long userId;
-
-  private String role;
-
-  private LocalDateTime createdAt;
+  /** 复制并替换id。 */
+  public UserEnterpriseRelation withId(Long id) {
+    return new UserEnterpriseRelation(id, enterpriseId, userId, role, createdAt);
+  }
 }

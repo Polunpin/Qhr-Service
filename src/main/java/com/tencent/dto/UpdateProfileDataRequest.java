@@ -1,9 +1,7 @@
 package com.tencent.dto;
 
-import lombok.Data;
-
-@Data
-public class UpdateProfileDataRequest {
-
-  private String profileData;
+/**
+ * 更新企业画像请求。
+ */
+public record UpdateProfileDataRequest(String profileData) {
 }

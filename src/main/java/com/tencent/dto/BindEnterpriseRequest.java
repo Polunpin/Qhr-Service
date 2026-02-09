@@ -1,9 +1,7 @@
 package com.tencent.dto;
 
-import lombok.Data;
-
-@Data
-public class BindEnterpriseRequest {
-
-  private String role;
+/**
+ * 绑定企业请求。
+ */
+public record BindEnterpriseRequest(String role) {
 }

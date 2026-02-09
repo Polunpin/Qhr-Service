@@ -1,26 +1,22 @@
 package com.tencent.model;
 
-import lombok.Data;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@Data
-public class User implements Serializable {
+/**
+ * 用户实体。
+ */
+public record User(Long id,
+                   String openid,
+                   String unionid,
+                   String mobile,
+                   String realName,
+                   Integer status,
+                   LocalDateTime createdAt,
+                   LocalDateTime updatedAt) implements Serializable, WithId<User> {
 
-  private Long id;
-
-  private String openid;
-
-  private String unionid;
-
-  private String mobile;
-
-  private String realName;
-
-  private Integer status;
-
-  private LocalDateTime createdAt;
-
-  private LocalDateTime updatedAt;
+  /** 复制并替换id。 */
+  public User withId(Long id) {
+    return new User(id, openid, unionid, mobile, realName, status, createdAt, updatedAt);
+  }
 }

@@ -34,4 +34,6 @@ public interface FinancingIntentionsMapper {
   long count(@Param("enterpriseId") Long enterpriseId,
              @Param("userId") Long userId,
              @Param("status") String status);
+
+  long lastInsertId();
 }

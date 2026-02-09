@@ -18,4 +18,6 @@ public interface StatusLogsMapper {
                                 @Param("size") Integer size);
 
   long countByOrderId(@Param("orderId") Long orderId);
+
+  long lastInsertId();
 }

@@ -11,9 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import com.tencent.config.ApiAssert;
 import com.tencent.config.ApiCode;
-import com.tencent.config.ApiException;
-import com.tencent.config.PageRequest;
+import com.tencent.config.PageBounds;
 import com.tencent.config.PageResult;
 
 @RestController
@@ -26,15 +26,15 @@ public class CustomServiceOrderController {
     this.orderService = orderService;
   }
 
+  /** 查询订单详情 */
   @GetMapping("/{id}")
   public ApiResponse getById(@PathVariable Long id) {
     CustomServiceOrder order = orderService.getById(id);
-    if (order == null) {
-      throw new ApiException(ApiCode.NOT_FOUND, "订单不存在");
-    }
+    ApiAssert.notNull(order, ApiCode.NOT_FOUND, "订单不存在");
     return ApiResponse.ok(order);
   }
 
+  /** 分页查询订单列表 */
   @GetMapping("/list")
   public ApiResponse list(@RequestParam(required = false) Long enterpriseId,
                           @RequestParam(required = false) Long staffId,
@@ -43,71 +43,64 @@ public class CustomServiceOrderController {
                           @RequestParam(required = false) String settleStatus,
                           @RequestParam(required = false) Integer page,
                           @RequestParam(required = false) Integer size) {
-    int safePage = PageRequest.normalizePage(page);
-    int safeSize = PageRequest.normalizeSize(size);
-    int offset = PageRequest.offset(safePage, safeSize);
+    PageBounds bounds = PageBounds.of(page, size);
     List<CustomServiceOrder> orders = orderService.list(enterpriseId, staffId, serviceStatus, currentStage, settleStatus,
-        offset, safeSize);
+        bounds.offset(), bounds.size());
     long total = orderService.count(enterpriseId, staffId, serviceStatus, currentStage, settleStatus);
-    return ApiResponse.ok(PageResult.of(orders, total, safePage, safeSize));
+    return ApiResponse.ok(PageResult.of(orders, total, bounds.page(), bounds.size()));
   }
 
+  /** 创建订单 */
   @PostMapping
   public ApiResponse create(@RequestBody CustomServiceOrder order) {
     Long id = orderService.create(order);
     return ApiResponse.ok(id);
   }
 
+  /** 更新订单 */
   @PutMapping("/{id}")
   public ApiResponse update(@PathVariable Long id, @RequestBody CustomServiceOrder order) {
-    order.setId(id);
-    if (!orderService.update(order)) {
-      throw new ApiException(ApiCode.NOT_FOUND, "订单不存在");
-    }
+    ApiAssert.isTrue(orderService.update(order.withId(id)), ApiCode.NOT_FOUND, "订单不存在");
     return ApiResponse.ok(true);
   }
 
+  /** 删除订单 */
   @DeleteMapping("/{id}")
   public ApiResponse delete(@PathVariable Long id) {
-    if (!orderService.delete(id)) {
-      throw new ApiException(ApiCode.NOT_FOUND, "订单不存在");
-    }
+    ApiAssert.isTrue(orderService.delete(id), ApiCode.NOT_FOUND, "订单不存在");
     return ApiResponse.ok(true);
   }
 
+  /** 指派订单负责人 */
   @PostMapping("/{id}/assign")
   public ApiResponse assignStaff(@PathVariable Long id, @RequestBody AssignStaffRequest request) {
-    if (!orderService.assignStaff(id, request.getStaffId())) {
-      throw new ApiException(ApiCode.NOT_FOUND, "订单不存在");
-    }
+    ApiAssert.isTrue(orderService.assignStaff(id, request.staffId()), ApiCode.NOT_FOUND, "订单不存在");
     return ApiResponse.ok(true);
   }
 
+  /** 更新订单服务状态 */
   @PostMapping("/{id}/service-status")
   public ApiResponse updateServiceStatus(@PathVariable Long id,
                                          @RequestBody UpdateStringStatusRequest request) {
-    if (!orderService.updateServiceStatus(id, request.getStatus())) {
-      throw new ApiException(ApiCode.NOT_FOUND, "订单不存在");
-    }
+    ApiAssert.isTrue(orderService.updateServiceStatus(id, request.status()), ApiCode.NOT_FOUND, "订单不存在");
     return ApiResponse.ok(true);
   }
 
+  /** 更新订单结算状态 */
   @PostMapping("/{id}/settle-status")
   public ApiResponse updateSettleStatus(@PathVariable Long id,
                                         @RequestBody UpdateSettleStatusRequest request) {
-    if (!orderService.updateSettleStatus(id, request.getSettleStatus())) {
-      throw new ApiException(ApiCode.NOT_FOUND, "订单不存在");
-    }
+    ApiAssert.isTrue(orderService.updateSettleStatus(id, request.settleStatus()),
+        ApiCode.NOT_FOUND, "订单不存在");
     return ApiResponse.ok(true);
   }
 
+  /** 推进订单阶段并写入日志 */
   @PostMapping("/{id}/stage")
   public ApiResponse advanceStage(@PathVariable Long id, @RequestBody AdvanceStageRequest request) {
-    boolean ok = orderService.advanceStage(id, request.getPostStage(), request.getServiceStatus(),
-        request.getRemark(), request.getOperatorType(), request.getOperatorId());
-    if (!ok) {
-      throw new ApiException(ApiCode.NOT_FOUND, "订单不存在");
-    }
+    boolean ok = orderService.advanceStage(id, request.postStage(), request.serviceStatus(),
+        request.remark(), request.operatorType(), request.operatorId());
+    ApiAssert.isTrue(ok, ApiCode.NOT_FOUND, "订单不存在");
     return ApiResponse.ok(true);
   }
 }

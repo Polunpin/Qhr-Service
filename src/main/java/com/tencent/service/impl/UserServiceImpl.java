@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public Long create(User user) {
     usersMapper.insert(user);
-    return user.getId();
+    return usersMapper.lastInsertId();
   }
 
   @Override
@@ -75,10 +75,8 @@ public class UserServiceImpl implements UserService {
     if (existing != null) {
       return true;
     }
-    UserEnterpriseRelation relation = new UserEnterpriseRelation();
-    relation.setUserId(userId);
-    relation.setEnterpriseId(enterpriseId);
-    relation.setRole(role == null || role.trim().isEmpty() ? "owner" : role.trim());
+    String safeRole = role == null || role.trim().isEmpty() ? "owner" : role.trim();
+    UserEnterpriseRelation relation = new UserEnterpriseRelation(null, enterpriseId, userId, safeRole, null);
     return relationMapper.insert(relation) > 0;
   }
 

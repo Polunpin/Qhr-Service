@@ -3,16 +3,18 @@
 <mapper namespace="com.tencent.dao.MatchRecordsMapper">
 
     <resultMap id="MatchRecordsMap" type="com.tencent.model.MatchRecord">
-        <id property="id" column="id"/>
-        <result property="matchNo" column="match_no"/>
-        <result property="enterpriseId" column="enterprise_id"/>
-        <result property="intentionId" column="intention_id"/>
-        <result property="productIds" column="product_ids"/>
-        <result property="matchScore" column="match_score"/>
-        <result property="riskType" column="risk_type"/>
-        <result property="riskLevel" column="risk_level"/>
-        <result property="status" column="status"/>
-        <result property="createdAt" column="created_at" javaType="java.time.LocalDateTime" />
+        <constructor>
+            <idArg column="id" javaType="java.lang.Long" name="id"/>
+            <arg column="match_no" javaType="java.lang.String" name="matchNo"/>
+            <arg column="enterprise_id" javaType="java.lang.Long" name="enterpriseId"/>
+            <arg column="intention_id" javaType="java.lang.Long" name="intentionId"/>
+            <arg column="product_ids" javaType="java.lang.String" name="productIds"/>
+            <arg column="match_score" javaType="java.math.BigDecimal" name="matchScore"/>
+            <arg column="risk_type" javaType="java.lang.String" name="riskType"/>
+            <arg column="risk_level" javaType="java.lang.String" name="riskLevel"/>
+            <arg column="status" javaType="java.lang.String" name="status"/>
+            <arg column="created_at" javaType="java.time.LocalDateTime" name="createdAt"/>
+        </constructor>
     </resultMap>
 
     <sql id="MatchRecord_Columns">
@@ -56,7 +58,7 @@
         </where>
     </select>
 
-    <insert id="insert" parameterType="com.tencent.model.MatchRecord" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" parameterType="com.tencent.model.MatchRecord">
         INSERT INTO match_records (match_no, enterprise_id, intention_id, product_ids,
                                    match_score, risk_type, risk_level, status)
         VALUES (#{matchNo}, #{enterpriseId}, #{intentionId}, #{productIds},
@@ -85,5 +87,9 @@
     <delete id="delete" parameterType="java.lang.Long">
         DELETE FROM match_records WHERE id = #{id}
     </delete>
+
+    <select id="lastInsertId" resultType="long">
+        SELECT LAST_INSERT_ID()
+    </select>
 
 </mapper>

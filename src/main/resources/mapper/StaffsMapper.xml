@@ -3,15 +3,17 @@
 <mapper namespace="com.tencent.dao.StaffsMapper">
 
     <resultMap id="StaffsMap" type="com.tencent.model.Staff">
-        <id property="id" column="id"/>
-        <result property="openid" column="openid"/>
-        <result property="realName" column="real_name"/>
-        <result property="mobile" column="mobile"/>
-        <result property="role" column="role"/>
-        <result property="department" column="department"/>
-        <result property="status" column="status"/>
-        <result property="lastUpdateAt" column="last_update_at" javaType="java.time.LocalDateTime" />
-        <result property="createdAt" column="created_at" javaType="java.time.LocalDateTime" />
+        <constructor>
+            <idArg column="id" javaType="java.lang.Long" name="id"/>
+            <arg column="openid" javaType="java.lang.String" name="openid"/>
+            <arg column="real_name" javaType="java.lang.String" name="realName"/>
+            <arg column="mobile" javaType="java.lang.String" name="mobile"/>
+            <arg column="role" javaType="java.lang.String" name="role"/>
+            <arg column="department" javaType="java.lang.String" name="department"/>
+            <arg column="status" javaType="java.lang.Integer" name="status"/>
+            <arg column="last_update_at" javaType="java.time.LocalDateTime" name="lastUpdateAt"/>
+            <arg column="created_at" javaType="java.time.LocalDateTime" name="createdAt"/>
+        </constructor>
     </resultMap>
 
     <sql id="Staff_Columns">
@@ -56,7 +58,7 @@
         </where>
     </select>
 
-    <insert id="insert" parameterType="com.tencent.model.Staff" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" parameterType="com.tencent.model.Staff">
         INSERT INTO staffs (openid, real_name, mobile, role, department, status)
         VALUES (#{openid}, #{realName}, #{mobile}, #{role}, #{department}, #{status})
     </insert>
@@ -82,5 +84,9 @@
     <delete id="delete" parameterType="java.lang.Long">
         DELETE FROM staffs WHERE id = #{id}
     </delete>
+
+    <select id="lastInsertId" resultType="long">
+        SELECT LAST_INSERT_ID()
+    </select>
 
 </mapper>

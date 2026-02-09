@@ -1,17 +1,12 @@
 package com.tencent.dto;
 
-import lombok.Data;
-
 import java.math.BigDecimal;
 
-@Data
-public class MatchProductsRequest {
-
-  private BigDecimal expectedAmount;
-
-  private Integer expectedTerm;
-
-  private String regionCode;
-
-  private String productType;
+/**
+ * 产品匹配请求。
+ */
+public record MatchProductsRequest(BigDecimal expectedAmount,
+                                   Integer expectedTerm,
+                                   String regionCode,
+                                   String productType) {
 }

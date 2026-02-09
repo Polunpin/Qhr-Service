@@ -1,9 +1,7 @@
 package com.tencent.dto;
 
-import lombok.Data;
-
-@Data
-public class UpdateSettleStatusRequest {
-
-  private String settleStatus;
+/**
+ * 更新结算状态请求。
+ */
+public record UpdateSettleStatusRequest(String settleStatus) {
 }

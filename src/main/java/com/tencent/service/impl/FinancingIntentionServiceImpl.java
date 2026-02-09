@@ -32,11 +32,12 @@ public class FinancingIntentionServiceImpl implements FinancingIntentionService 
 
   @Override
   public Long create(FinancingIntention intention) {
-    if (intention.getApplicationNo() == null || intention.getApplicationNo().trim().isEmpty()) {
-      intention.setApplicationNo(generateApplicationNo());
+    FinancingIntention toSave = intention;
+    if (intention.applicationNo() == null || intention.applicationNo().trim().isEmpty()) {
+      toSave = withApplicationNo(intention, generateApplicationNo());
     }
-    intentionsMapper.insert(intention);
-    return intention.getId();
+    intentionsMapper.insert(toSave);
+    return intentionsMapper.lastInsertId();
   }
 
   @Override
@@ -75,5 +76,24 @@ public class FinancingIntentionServiceImpl implements FinancingIntentionService 
     String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
     int random = ThreadLocalRandom.current().nextInt(10000);
     return prefix + timestamp + String.format("%04d", random);
+  }
+
+  private FinancingIntention withApplicationNo(FinancingIntention source, String applicationNo) {
+    return new FinancingIntention(source.id(),
+        applicationNo,
+        source.enterpriseId(),
+        source.userId(),
+        source.expectedAmount(),
+        source.expectedTerm(),
+        source.purpose(),
+        source.repaymentSource(),
+        source.guaranteeType(),
+        source.targetProductId(),
+        source.contactMobile(),
+        source.status(),
+        source.refusalReason(),
+        source.urgencyLevel(),
+        source.createdAt(),
+        source.updatedAt());
   }
 }

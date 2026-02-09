@@ -26,7 +26,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
   @Override
   public Long create(Enterprise enterprise) {
     enterprisesMapper.insert(enterprise);
-    return enterprise.getId();
+    return enterprisesMapper.lastInsertId();
   }
 
   @Override

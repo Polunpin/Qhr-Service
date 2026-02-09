@@ -1,37 +1,29 @@
 package com.tencent.model;
 
-import lombok.Data;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Data
-public class CustomServiceOrder implements Serializable {
+/**
+ * 非标服务订单实体。
+ */
+public record CustomServiceOrder(Long id,
+                                 Long enterpriseId,
+                                 Long intentionId,
+                                 Long staffId,
+                                 String currentStage,
+                                 String serviceStatus,
+                                 BigDecimal loanAmount,
+                                 BigDecimal commissionAmount,
+                                 BigDecimal serviceCost,
+                                 String costDetails,
+                                 String settleStatus,
+                                 LocalDateTime lastUpdateAt,
+                                 LocalDateTime createdAt) implements Serializable, WithId<CustomServiceOrder> {
 
-  private Long id;
-
-  private Long enterpriseId;
-
-  private Long intentionId;
-
-  private Long staffId;
-
-  private String currentStage;
-
-  private String serviceStatus;
-
-  private BigDecimal loanAmount;
-
-  private BigDecimal commissionAmount;
-
-  private BigDecimal serviceCost;
-
-  private String costDetails;
-
-  private String settleStatus;
-
-  private LocalDateTime lastUpdateAt;
-
-  private LocalDateTime createdAt;
+  /** 复制并替换id。 */
+  public CustomServiceOrder withId(Long id) {
+    return new CustomServiceOrder(id, enterpriseId, intentionId, staffId, currentStage, serviceStatus,
+        loanAmount, commissionAmount, serviceCost, costDetails, settleStatus, lastUpdateAt, createdAt);
+  }
 }

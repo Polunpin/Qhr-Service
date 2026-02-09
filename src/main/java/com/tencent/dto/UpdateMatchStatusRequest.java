@@ -1,9 +1,7 @@
 package com.tencent.dto;
 
-import lombok.Data;
-
-@Data
-public class UpdateMatchStatusRequest {
-
-  private String matchStatus;
+/**
+ * 更新企业匹配状态请求。
+ */
+public record UpdateMatchStatusRequest(String matchStatus) {
 }

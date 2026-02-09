@@ -30,7 +30,7 @@ public class StaffServiceImpl implements StaffService {
   @Override
   public Long create(Staff staff) {
     staffsMapper.insert(staff);
-    return staff.getId();
+    return staffsMapper.lastInsertId();
   }
 
   @Override

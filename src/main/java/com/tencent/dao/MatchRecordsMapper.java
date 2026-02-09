@@ -30,4 +30,6 @@ public interface MatchRecordsMapper {
   long count(@Param("enterpriseId") Long enterpriseId,
              @Param("intentionId") Long intentionId,
              @Param("status") String status);
+
+  long lastInsertId();
 }

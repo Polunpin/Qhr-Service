@@ -3,14 +3,16 @@
 <mapper namespace="com.tencent.dao.StatusLogsMapper">
 
     <resultMap id="StatusLogsMap" type="com.tencent.model.StatusLog">
-        <id property="id" column="id"/>
-        <result property="orderId" column="order_id"/>
-        <result property="operatorType" column="operator_type"/>
-        <result property="operatorId" column="operator_id"/>
-        <result property="preStage" column="pre_stage"/>
-        <result property="postStage" column="post_stage"/>
-        <result property="remark" column="remark"/>
-        <result property="createdAt" column="created_at" javaType="java.time.LocalDateTime" />
+        <constructor>
+            <idArg column="id" javaType="java.lang.Long" name="id"/>
+            <arg column="order_id" javaType="java.lang.Long" name="orderId"/>
+            <arg column="operator_type" javaType="java.lang.String" name="operatorType"/>
+            <arg column="operator_id" javaType="java.lang.Long" name="operatorId"/>
+            <arg column="pre_stage" javaType="java.lang.String" name="preStage"/>
+            <arg column="post_stage" javaType="java.lang.String" name="postStage"/>
+            <arg column="remark" javaType="java.lang.String" name="remark"/>
+            <arg column="created_at" javaType="java.time.LocalDateTime" name="createdAt"/>
+        </constructor>
     </resultMap>
 
     <sql id="StatusLog_Columns">
@@ -39,9 +41,13 @@
         WHERE order_id = #{orderId}
     </select>
 
-    <insert id="insert" parameterType="com.tencent.model.StatusLog" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" parameterType="com.tencent.model.StatusLog">
         INSERT INTO status_logs (order_id, operator_type, operator_id, pre_stage, post_stage, remark)
         VALUES (#{orderId}, #{operatorType}, #{operatorId}, #{preStage}, #{postStage}, #{remark})
     </insert>
+
+    <select id="lastInsertId" resultType="long">
+        SELECT LAST_INSERT_ID()
+    </select>
 
 </mapper>

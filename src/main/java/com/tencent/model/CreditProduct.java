@@ -1,41 +1,32 @@
 package com.tencent.model;
 
-import lombok.Data;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Data
-public class CreditProduct implements Serializable {
+/**
+ * 信贷产品实体。
+ */
+public record CreditProduct(Long id,
+                            String bankName,
+                            String productName,
+                            String productType,
+                            BigDecimal minAmount,
+                            BigDecimal maxAmount,
+                            String interestRateRange,
+                            Integer loanTerm,
+                            String repaymentMethod,
+                            String serviceArea,
+                            String criteriaJson,
+                            Integer status,
+                            BigDecimal successRate,
+                            LocalDateTime createdAt,
+                            LocalDateTime updatedAt) implements Serializable, WithId<CreditProduct> {
 
-  private Long id;
-
-  private String bankName;
-
-  private String productName;
-
-  private String productType;
-
-  private BigDecimal minAmount;
-
-  private BigDecimal maxAmount;
-
-  private String interestRateRange;
-
-  private Integer loanTerm;
-
-  private String repaymentMethod;
-
-  private String serviceArea;
-
-  private String criteriaJson;
-
-  private Integer status;
-
-  private BigDecimal successRate;
-
-  private LocalDateTime createdAt;
-
-  private LocalDateTime updatedAt;
+  /** 复制并替换id。 */
+  public CreditProduct withId(Long id) {
+    return new CreditProduct(id, bankName, productName, productType, minAmount, maxAmount,
+        interestRateRange, loanTerm, repaymentMethod, serviceArea, criteriaJson, status,
+        successRate, createdAt, updatedAt);
+  }
 }

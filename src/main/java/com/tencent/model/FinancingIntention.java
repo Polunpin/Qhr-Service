@@ -1,43 +1,33 @@
 package com.tencent.model;
 
-import lombok.Data;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Data
-public class FinancingIntention implements Serializable {
+/**
+ * 融资意向实体。
+ */
+public record FinancingIntention(Long id,
+                                 String applicationNo,
+                                 Long enterpriseId,
+                                 Long userId,
+                                 BigDecimal expectedAmount,
+                                 Integer expectedTerm,
+                                 String purpose,
+                                 String repaymentSource,
+                                 String guaranteeType,
+                                 Long targetProductId,
+                                 String contactMobile,
+                                 String status,
+                                 String refusalReason,
+                                 Integer urgencyLevel,
+                                 LocalDateTime createdAt,
+                                 LocalDateTime updatedAt) implements Serializable, WithId<FinancingIntention> {
 
-  private Long id;
-
-  private String applicationNo;
-
-  private Long enterpriseId;
-
-  private Long userId;
-
-  private BigDecimal expectedAmount;
-
-  private Integer expectedTerm;
-
-  private String purpose;
-
-  private String repaymentSource;
-
-  private String guaranteeType;
-
-  private Long targetProductId;
-
-  private String contactMobile;
-
-  private String status;
-
-  private String refusalReason;
-
-  private Integer urgencyLevel;
-
-  private LocalDateTime createdAt;
-
-  private LocalDateTime updatedAt;
+  /** 复制并替换id。 */
+  public FinancingIntention withId(Long id) {
+    return new FinancingIntention(id, applicationNo, enterpriseId, userId, expectedAmount, expectedTerm,
+        purpose, repaymentSource, guaranteeType, targetProductId, contactMobile, status, refusalReason,
+        urgencyLevel, createdAt, updatedAt);
+  }
 }

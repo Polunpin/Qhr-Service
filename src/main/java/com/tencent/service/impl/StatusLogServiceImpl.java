@@ -20,7 +20,7 @@ public class StatusLogServiceImpl implements StatusLogService {
   @Override
   public Long create(StatusLog log) {
     statusLogsMapper.insert(log);
-    return log.getId();
+    return statusLogsMapper.lastInsertId();
   }
 
   @Override

@@ -3,22 +3,24 @@
 <mapper namespace="com.tencent.dao.FinancingIntentionsMapper">
 
     <resultMap id="FinancingIntentionsMap" type="com.tencent.model.FinancingIntention">
-        <id property="id" column="id"/>
-        <result property="applicationNo" column="application_no"/>
-        <result property="enterpriseId" column="enterprise_id"/>
-        <result property="userId" column="user_id"/>
-        <result property="expectedAmount" column="expected_amount"/>
-        <result property="expectedTerm" column="expected_term"/>
-        <result property="purpose" column="purpose"/>
-        <result property="repaymentSource" column="repayment_source"/>
-        <result property="guaranteeType" column="guarantee_type"/>
-        <result property="targetProductId" column="target_product_id"/>
-        <result property="contactMobile" column="contact_mobile"/>
-        <result property="status" column="status"/>
-        <result property="refusalReason" column="refusal_reason"/>
-        <result property="urgencyLevel" column="urgency_level"/>
-        <result property="createdAt" column="created_at" javaType="java.time.LocalDateTime" />
-        <result property="updatedAt" column="updated_at" javaType="java.time.LocalDateTime" />
+        <constructor>
+            <idArg column="id" javaType="java.lang.Long" name="id"/>
+            <arg column="application_no" javaType="java.lang.String" name="applicationNo"/>
+            <arg column="enterprise_id" javaType="java.lang.Long" name="enterpriseId"/>
+            <arg column="user_id" javaType="java.lang.Long" name="userId"/>
+            <arg column="expected_amount" javaType="java.math.BigDecimal" name="expectedAmount"/>
+            <arg column="expected_term" javaType="java.lang.Integer" name="expectedTerm"/>
+            <arg column="purpose" javaType="java.lang.String" name="purpose"/>
+            <arg column="repayment_source" javaType="java.lang.String" name="repaymentSource"/>
+            <arg column="guarantee_type" javaType="java.lang.String" name="guaranteeType"/>
+            <arg column="target_product_id" javaType="java.lang.Long" name="targetProductId"/>
+            <arg column="contact_mobile" javaType="java.lang.String" name="contactMobile"/>
+            <arg column="status" javaType="java.lang.String" name="status"/>
+            <arg column="refusal_reason" javaType="java.lang.String" name="refusalReason"/>
+            <arg column="urgency_level" javaType="java.lang.Integer" name="urgencyLevel"/>
+            <arg column="created_at" javaType="java.time.LocalDateTime" name="createdAt"/>
+            <arg column="updated_at" javaType="java.time.LocalDateTime" name="updatedAt"/>
+        </constructor>
     </resultMap>
 
     <sql id="FinancingIntention_Columns">
@@ -63,7 +65,7 @@
         </where>
     </select>
 
-    <insert id="insert" parameterType="com.tencent.model.FinancingIntention" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" parameterType="com.tencent.model.FinancingIntention">
         INSERT INTO financing_intentions (application_no, enterprise_id, user_id, expected_amount,
                                           expected_term, purpose, repayment_source, guarantee_type,
                                           target_product_id, contact_mobile, status, refusal_reason, urgency_level)
@@ -106,5 +108,9 @@
     <delete id="delete" parameterType="java.lang.Long">
         DELETE FROM financing_intentions WHERE id = #{id}
     </delete>
+
+    <select id="lastInsertId" resultType="long">
+        SELECT LAST_INSERT_ID()
+    </select>
 
 </mapper>

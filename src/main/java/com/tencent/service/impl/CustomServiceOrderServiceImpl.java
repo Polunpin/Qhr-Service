@@ -31,7 +31,7 @@ public class CustomServiceOrderServiceImpl implements CustomServiceOrderService 
   @Override
   public Long create(CustomServiceOrder order) {
     ordersMapper.insert(order);
-    return order.getId();
+    return ordersMapper.lastInsertId();
   }
 
   @Override
@@ -72,13 +72,15 @@ public class CustomServiceOrderServiceImpl implements CustomServiceOrderService 
     if (serviceStatus != null && !serviceStatus.trim().isEmpty()) {
       ordersMapper.updateServiceStatus(id, serviceStatus);
     }
-    StatusLog log = new StatusLog();
-    log.setOrderId(id);
-    log.setOperatorType(operatorType == null || operatorType.trim().isEmpty() ? "system" : operatorType.trim());
-    log.setOperatorId(operatorId);
-    log.setPreStage(existing.getCurrentStage());
-    log.setPostStage(postStage);
-    log.setRemark(remark);
+    String safeOperatorType = operatorType == null || operatorType.trim().isEmpty() ? "system" : operatorType.trim();
+    StatusLog log = new StatusLog(null,
+        id,
+        safeOperatorType,
+        operatorId,
+        existing.currentStage(),
+        postStage,
+        remark,
+        null);
     statusLogsMapper.insert(log);
     return updated;
   }
